@@ -1,4 +1,3 @@
-// 接口初探
 function printLabel(labelObj) {
     console.log(labelObj.label);
 }
@@ -19,3 +18,6 @@ function getSquare(squareValue) {
 }
 var mySquare = getSquare({ col: "12", size: 2 });
 var mySquare1 = getSquare({ col: "1" });
+var mySearch = function (source, size) { return true; };
+var readonlyDic = { 1: "2", "2": "1" };
+// readonlyDic["2"] = "2" 

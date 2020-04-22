@@ -2,9 +2,9 @@
     "compilerOptions": {
         "outDir": "./dist/",
         "sourceMap": false,
-        "noImplicitAny": true,
+        "noImplicitAny": false,
+        "noImplicitThis":true,
         "target": "es5",
         "rootDir": "./src"
     },
-
 }
