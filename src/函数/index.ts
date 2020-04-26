@@ -55,7 +55,7 @@ namespace overLoad{
     // 把最精确的定义放在前面
     function pickCard(x: {suit: string; card: number}[]): number;
     function pickCard(x: number): {suit: string; card: number};
-    function pickCard(x): any {
+    function pickCard(x: any): any {
         if (typeof x == 'object') {
             let pickCard = Math.floor(Math.random() * x.length);
             return pickCard;

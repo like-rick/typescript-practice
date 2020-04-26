@@ -180,7 +180,7 @@ namespace keepClass {
     class Point {
 
     }
-    // typeof 的意思是去 Point的类型
+    // typeof 的意思是取 Point的类型
     let aliasPoint: typeof Point = Point;
     let p = new aliasPoint();
 }
