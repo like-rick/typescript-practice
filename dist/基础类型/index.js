@@ -32,15 +32,15 @@ var pretty = 4;
 function returnNothing() {
     console.log("123");
 }
-var voidValue = undefined || null;
-var n = null;
+// let voidValue: void = undefined || null;
+// let n: number = null;
 // never 
 function catchError() {
     throw new Error('123');
 }
 create({ 1: 1 });
-create(null);
-create(undefined);
+// create(null)
+// create(undefined)
 // 类型断言
 var someValue = "dog";
 var someNum = someValue.length;

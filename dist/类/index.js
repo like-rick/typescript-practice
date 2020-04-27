@@ -208,7 +208,7 @@ var keepClass;
         }
         return Point;
     }());
-    // typeof 的意思是去 Point的类型
+    // typeof 的意思是取 Point的类型
     var aliasPoint = Point;
     var p = new aliasPoint();
 })(keepClass || (keepClass = {}));

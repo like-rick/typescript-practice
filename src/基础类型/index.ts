@@ -36,9 +36,9 @@ function returnNothing(): void{
     console.log("123");
 }
 
-let voidValue: void = undefined || null;
+// let voidValue: void = undefined || null;
 
-let n: number = null;
+// let n: number = null;
 
 // never 
 function catchError(): never{
@@ -48,8 +48,8 @@ function catchError(): never{
 // object 
 declare function create(o: object): void;
 create({1:1});
-create(null)
-create(undefined)
+// create(null)
+// create(undefined)
 
 // 类型断言
 

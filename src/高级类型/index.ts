@@ -7,9 +7,10 @@ namespace intersection{
             result[id] = (<T & U>first)[id];
         }
         for (let id in second) {
-            if (!second.hasOwnProperty(id)) {
-                result[id] = (<T & U>second)[id];
-            }
+            // if (!second.hasOwnProperty(id)) {
+            //     // 
+            //     result[id] = (<T & U>second)[id];
+            // }
         }
         return result;
     }
@@ -127,6 +128,81 @@ namespace UnionType {
     } else {
         pet.fly();
     }
+
+}
+
+
+// null, undefined 类型
+
+namespace NullType {
+
+    let sn: string | null = 'bar';
+    // 可选参数和可选属性
+    // 使用strictNullChecks，可选参数会自动加上 | undefined
+    // 类型保护和类型断言
+    // 可以为null的类型是通过联合类型实现的，需要使用类型保护来去除null类型
+
+    // 使用类型断言去除null，undefined，语法是添加!后缀
+
+    function broken(name: string | null) : string{
+        function postFix(epithet: string) {
+            // return name.charAt(0) + ". the" + epithet; // error, name is possibly 'null'
+            return name?.charAt(0) + ". the"
+        }
+        name = name || "Bob";
+        return postFix("great");
+    }
+}
+
+// 类型别名
+namespace AliasType {
+    // 起别名不会创建一个新的类型，只是创建了一个新的名字引用那个类型
+    type Name = string;
+    type NameResolver = () => string;
+    type NameOrResolbe = Name | NameResolver;
+    function getName(n: NameOrResolbe): Name {
+        if (typeof n === 'string') {
+            return n;
+        } else {
+            return n();
+        }
+    }
+
+    // 类型别名也可以是泛型, 我们可以添加类型参数，并且在别名声明的右侧传入
+
+    type Container<T> = { value: T };
+
+    //使用类型别名在属性里引用自己
+    type Tree<T> = {
+        value: T;
+        left: Tree<T>;
+        right: Tree<T>;
+    }
+
+    // 与交叉类型一起使用，创建一些稀奇古怪的类型
+    type LinkList<T> = T & {next: LinkList<T>};
+    
+    interface Person {
+        name: string;
+    }
+
+    let people: LinkList<Person> = {
+        name: "1",
+        next: {
+            name: "2",
+            next: <LinkList<Person>>{}
+        }
+    };
+
+    let s = people.name;
+    let s1 = people.next.next.next.next.next.next.next.next.name;
+
+    // 类型别名和接口的区别
+
+    // 1.接口创建了一个新的名字，可以在任何地方使用。类型别名不创建名字
+    // 2.类型别名不能被extends和implements，自己也不能extends和implements其他类。
+    // 因为在软件中的对象应该对于扩展是开放的，对于修改是封闭的
+    // 3.如果你无法通过接口来描述一个类型并且需要使用联合类型或者元组类型，这是通常使用类型别名
 
 }
 

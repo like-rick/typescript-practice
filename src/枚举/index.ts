@@ -43,7 +43,7 @@ enum Enum {
     A = "a",
 }
 
-let a1 = Enum["a"];
+// let a1 = Enum["a"];
 let a2 = Enum.A;
 
 //const 枚举

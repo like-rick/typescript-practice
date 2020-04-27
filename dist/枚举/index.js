@@ -30,6 +30,6 @@ var Enum;
 (function (Enum) {
     Enum["A"] = "a";
 })(Enum || (Enum = {}));
-var a1 = Enum["a"];
+// let a1 = Enum["a"];
 var a2 = Enum.A;
 var a4 = 1 /* A */;
