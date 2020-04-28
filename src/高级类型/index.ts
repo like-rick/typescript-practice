@@ -119,7 +119,8 @@ namespace UnionType {
     // 上面的类型保护，需要多次使用类型断言
 
     // 用户自定义的类型保护 ??? 没太明白
-    // 类型谓词 parameterName is type 
+    // 类型谓词 parameterName is type  
+    // 使用类型谓词，相当于返回的是一个boolean值
     function isFish(pet: Bird | Fish): pet is Fish {
         return (<Fish>pet).swim !== undefined;
     }
@@ -203,6 +204,45 @@ namespace AliasType {
     // 2.类型别名不能被extends和implements，自己也不能extends和implements其他类。
     // 因为在软件中的对象应该对于扩展是开放的，对于修改是封闭的
     // 3.如果你无法通过接口来描述一个类型并且需要使用联合类型或者元组类型，这是通常使用类型别名
+
+    // 字符串字面量类型
+    // 允许你指定字符串必须是固定值，与联合类型，类型保护和类型别名可以很好地配合，可以实现类似枚举类型的字符串
+    type Easing = "ease-in" | "ease-out" | "ease-in-out";
+    class UIElement {
+        animate(dx: number, dy: number, ease: Easing): void {
+            if (ease === "ease-in") {
+
+            } else if (ease === "ease-in-out") {
+                
+            } else if (ease === "ease-out") {
+
+            } else {
+
+            }
+        }
+    }
+    let button = new UIElement();
+    // button.animate(1,2,"213"); // error ,  
+    button.animate(1,2,"ease-out");
+
+    // 字符串字面量用于区分重载
+    function createElement(tagName: "img"): HTMLImageElement;
+    function createElement(tagName: "a"): HTMLAnchorElement;
+    // more overloads
+    function createElement(tagName: string): Element {
+       return document.createElement(tagName)
+    }
+
+    // 数字字面量类型
+    // ....
+
+
+    // 枚举成员类型
+    // 当每个枚举成员都是字面量初始化的时候，枚举成员是具有类型的, 所有枚举成员组成的联合类型
+    
+    // 合并单例类型，联合类型，类型保护和类型别名创建一个 可辨识联合的高级模式，也叫做标签联合或代数数据类型
+    
+
 
 }
 
