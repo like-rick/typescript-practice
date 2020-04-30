@@ -391,6 +391,9 @@ namespace ReflectType {
     //     option1: boolean;
     //     option2: boolean;
     // }
+    //属性列表是keyof T 且结果类型是T[P]的变体，这是使用通用类型的一个好模板，因为映射只作用于T的属性，而没有作用于其他
+    // 
+    //
 
     type NullablePerson = {[P in keyof Person]: Person[P] | null}
     type Partial_1 = {[P in keyof Person]: Person[P]}
