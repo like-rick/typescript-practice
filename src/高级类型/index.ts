@@ -132,9 +132,7 @@ namespace UnionType {
 
 }
 
-
 // null, undefined 类型
-
 namespace NullType {
 
     let sn: string | null = 'bar';
@@ -240,9 +238,165 @@ namespace AliasType {
     // 枚举成员类型
     // 当每个枚举成员都是字面量初始化的时候，枚举成员是具有类型的, 所有枚举成员组成的联合类型
     
-    // 合并单例类型，联合类型，类型保护和类型别名创建一个 可辨识联合的高级模式，也叫做标签联合或代数数据类型
+    // 合并单例类型(可辨识)，联合类型(联合)，类型保护和类型别名创建一个 可辨识联合的高级模式，也叫做标签联合或代数数据类型
     
+    interface Square{
+        kind: "square";
+        size: number;
+    }
+    interface Rectangle{
+        kind: "rectangle";
+        height: number;
+        width: number;
+    }
+    interface Circle{
+        kind: "circle";
+        radius: number;
+    }
+    interface Triangle{
+        kind: "triangle";
+        size: number;
+    }
+    type Shape = Square | Rectangle | Circle | Triangle; // 联合
 
+    // 完整性检查，当Shape添加新类型的时候，area函数需要做完整性检查
+    function area_1(s: Shape): number | undefined{
+        switch(s.kind) {
+            case "square": return s.size * s.size;
+            case "rectangle": return s.height * s.width;
+            case "circle": return Math.PI * s.radius ** 2;
+        }
+    }
+
+    // 使用never类型，在编译阶段进行完整性检查
+    function assertNever(x: never): never {
+        throw new Error("Unexpected object: " + x);
+    }
+    function area_2(s: Shape) {
+        switch(s.kind) {
+            case "square": return s.size * s.size;
+            case "rectangle": return s.height * s.width;
+            case "circle": return Math.PI * s.radius ** 2;
+            // 这里assertNever检查s是否是never类型，即为所有可能情况后剩下的类型
+            // 如果你忘记了某个case，这里就会报错，这会更加明显的提示你，去添加未添加的case
+            case "triangle": return s.size;
+            default: return assertNever(s);
+        }
+    }
+
+    // 多态的this类型
+    // 多态的this类型表示的是某个包含类或接口的子类型，能很容易的表现连贯性
+
+    // 计算器例子，每个操作之后都返回this类型
+    class BasicCalculator {
+        public constructor (protected value: number = 0) {}
+        public add(operand: number): this {
+            this.value += operand;
+            return this;
+        }
+        public multiply(operand: number): this {
+            this.value *= operand;
+            return this;
+        }
+        public currentValue(): number {
+            return this.value;
+        }
+    }
+
+    let calc = new BasicCalculator(2).add(3).multiply(2).currentValue();
+
+    // 由于这个类使用了this类型，所以继承它的时候，可以直接使用之前的方法
+    
+    class ScientificCalculator extends BasicCalculator {
+        constructor(value = 0) {
+            super(value);
+        }
+        public sin(): this{
+            this.value = Math.sin(this.value);
+            return this;
+        }
+    }
+    let sv = new ScientificCalculator(2).multiply(5).sin().currentValue();
+}
+
+// 索引类型
+// 使用索引类型，编译器就能够检查使用了动态属性名的代码
+namespace IndexType {
+    // 从javascript的对象中选取一个属性的子集
+    `js
+        function pluck(o, names) {
+            return names.map(n => o[n]);
+        }
+    `
+    function pluck<T, K extends keyof T> (o: T, names: K[]): T[K][] {
+        return names.map(n => o[n])
+    }
+    interface Person {
+        name: string;
+        age: number;
+    }
+    let p: Person = {
+        name: "jarid",
+        age: 35,
+    }
+    let s: Array<string> = pluck(p, ['name']);
+    let s1: string[] = pluck(p, ["name"])
+    // keyof 索引类型查询操作符
+    // keyof T 的结果为T上的已知公共属性名的联合
+    // 索引类型查询
+    let personProps: keyof Person;  // 'name' | 'age'
+    // T[K] 索引访问操作符，类型语法反应了表达式语法
+    // 索引类型访问
+    function getProperty<T, K extends keyof T>(o: T, name: K): T[K] {
+        return o[name];
+    }
+    // 索引类型和字符串索引签名交互
+    interface Map<T> {
+        [key: string]: T;
+    }
+    // 如果你有一个带有字符串索引签名的类型，那么keyof T会是string。并且T[string]为索引签名的类型
+    let keys: keyof Map<number>;  //string
+    let value: Map<number>['foo']; //number
+}
+
+// 映射类型
+// 从旧类型中创建新类型的一种方式 映射类型
+// 在映射类型里，新类型以相同的形式去转换旧类型里的每一个属性
+namespace ReflectType {
+    interface Person {
+        name: string;
+        age: number;
+    }
+    // interface PersonPartial {
+    //     name?: string;
+    //     age?: number;
+    // }
+    interface PersonReadonly {
+        readonly name: string;
+        readonly age: number;
+    }
+    type Readonly<T> = {
+        readonly [P in keyof T]: T[P];
+    }
+    type Partial<T> = {
+        [P in keyof T]? :T[P];
+    }
+
+    type PersonPartial = Partial<Person>;
+    type ReadonlyPerson = Readonly<Person>;
+
+    type Keys = 'option1' | 'option2'
+    type Flags = {[K in Keys]: boolean};
+    // type FLags = {
+    //     option1: boolean;
+    //     option2: boolean;
+    // }
+
+    type NullablePerson = {[P in keyof Person]: Person[P] | null}
+    type Partial_1 = {[P in keyof Person]: Person[P]}
+
+    type Nullable<T> = {[P in keyof T]: T[P] | null}
+    type Partial_2<T> = {[P in keyof T]: T[P]}
 
 }
 

@@ -130,7 +130,8 @@ var UnionType;
     }
     // 上面的类型保护，需要多次使用类型断言
     // 用户自定义的类型保护 ??? 没太明白
-    // 类型谓词 parameterName is type 
+    // 类型谓词 parameterName is type  
+    // 使用类型谓词，相当于返回的是一个boolean值
     function isFish(pet) {
         return pet.swim !== undefined;
     }
@@ -160,8 +161,8 @@ var NullType;
     }
 })(NullType || (NullType = {}));
 // 类型别名
-var AlisType;
-(function (AlisType) {
+var AliasType;
+(function (AliasType) {
     function getName(n) {
         if (typeof n === 'string') {
             return n;
@@ -170,4 +171,81 @@ var AlisType;
             return n();
         }
     }
-})(AlisType || (AlisType = {}));
+    var people = {
+        name: "1",
+        next: {
+            name: "2",
+            next: {}
+        }
+    };
+    var s = people.name;
+    var s1 = people.next.next.next.next.next.next.next.next.name;
+    var UIElement = /** @class */ (function () {
+        function UIElement() {
+        }
+        UIElement.prototype.animate = function (dx, dy, ease) {
+            if (ease === "ease-in") {
+            }
+            else if (ease === "ease-in-out") {
+            }
+            else if (ease === "ease-out") {
+            }
+            else {
+            }
+        };
+        return UIElement;
+    }());
+    var button = new UIElement();
+    // button.animate(1,2,"213"); // error ,  
+    button.animate(1, 2, "ease-out");
+    // more overloads
+    function createElement(tagName) {
+        return document.createElement(tagName);
+    }
+    // 完整性检查，当Shape添加新类型的时候，area函数需要做完整性检查
+    function area_1(s) {
+        switch (s.kind) {
+            case "square": return s.size * s.size;
+            case "rectangle": return s.height * s.width;
+            case "circle": return Math.PI * Math.pow(s.radius, 2);
+        }
+    }
+    // 使用never类型，在编译阶段进行完整性检查
+    function assertNever(x) {
+        throw new Error("Unexpected object: " + x);
+    }
+    function area_2(s) {
+        switch (s.kind) {
+            case "square": return s.size * s.size;
+            case "rectangle": return s.height * s.width;
+            case "circle": return Math.PI * Math.pow(s.radius, 2);
+            // 这里assertNever检查s是否是never类型，即为所有可能情况后剩下的类型
+            // 如果你忘记了某个case，这里就会报错，这会更加明显的提示你，去添加未添加的case
+            case "triangle": return s.size;
+            default: return assertNever(s);
+        }
+    }
+    // 多态的this类型
+    // 多态的this类型表示的是某个包含类或接口的子类型，能很容易的表现连贯性
+    // 计算器例子，每个操作之后都返回this类型
+    var BasicCalculator = /** @class */ (function () {
+        function BasicCalculator(value) {
+            if (value === void 0) { value = 0; }
+            this.value = value;
+        }
+        BasicCalculator.prototype.add = function (operand) {
+            this.value += operand;
+            return this;
+        };
+        BasicCalculator.prototype.multiply = function (operand) {
+            this.value *= operand;
+            return this;
+        };
+        BasicCalculator.prototype.currentValue = function () {
+            return this.value;
+        };
+        return BasicCalculator;
+    }());
+    var calc = new BasicCalculator(2).add(3).multiply(2).currentValue();
+    console.log(calc);
+})(AliasType || (AliasType = {}));
