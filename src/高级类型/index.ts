@@ -392,14 +392,48 @@ namespace ReflectType {
     //     option2: boolean;
     // }
     //属性列表是keyof T 且结果类型是T[P]的变体，这是使用通用类型的一个好模板，因为映射只作用于T的属性，而没有作用于其他
-    // 
-    //
+    // 编译器知道在添加任何新属性之前可以拷贝所有存在的属性修饰符，比如 readOnly
 
     type NullablePerson = {[P in keyof Person]: Person[P] | null}
     type Partial_1 = {[P in keyof Person]: Person[P]}
 
     type Nullable<T> = {[P in keyof T]: T[P] | null}
     type Partial_2<T> = {[P in keyof T]: T[P]}
+
+    type Proxy<T> = {
+        get(): T;
+        set(value: T): void;
+    }
+    type Proxify<T> = {
+        [P in keyof T]: Proxy<T>;
+    }
+
+    // function proxify<T>(o: T): Proxify<T> {
+    //   let res = {} as Proxify<T>;
+      
+    // }
+    interface Pro {
+        [key: string]: string;
+    }
+    // let ss = proxify<Pro>({
+    //     "kind": "rectangle"
+    // });
+
+    // 由映射类型进行的推断
+    // function unproxify<T>(t: Proxify<T>): T {
+    //     let result = {} as T;
+    //     for (const k in t) {
+    //         result[k] = t[k].get();
+    //     }
+    //     return result;
+    // }
+
+    // 预定义的有条件类型
+    // Exclude<T, U> -- 从T中剔除可以赋值给U的类型
+    // Extract<T, U> -- 提取T中可以赋值给U的类型
+    // NonNullable<T> -- 从T中剔除null和undefined
+    // ReturnType<T> -- 获取函数返回值类型
+    // InstanceType<T> -- 获取构造函数类型的实例类型
 
 }
 

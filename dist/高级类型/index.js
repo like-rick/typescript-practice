@@ -247,5 +247,46 @@ var AliasType;
         return BasicCalculator;
     }());
     var calc = new BasicCalculator(2).add(3).multiply(2).currentValue();
-    console.log(calc);
+    // 由于这个类使用了this类型，所以继承它的时候，可以直接使用之前的方法
+    var ScientificCalculator = /** @class */ (function (_super) {
+        __extends(ScientificCalculator, _super);
+        function ScientificCalculator(value) {
+            if (value === void 0) { value = 0; }
+            return _super.call(this, value) || this;
+        }
+        ScientificCalculator.prototype.sin = function () {
+            this.value = Math.sin(this.value);
+            return this;
+        };
+        return ScientificCalculator;
+    }(BasicCalculator));
+    var sv = new ScientificCalculator(2).multiply(5).sin().currentValue();
 })(AliasType || (AliasType = {}));
+// 索引类型
+// 使用索引类型，编译器就能够检查使用了动态属性名的代码
+var IndexType;
+(function (IndexType) {
+    // 从javascript的对象中选取一个属性的子集
+    "js\n        function pluck(o, names) {\n            return names.map(n => o[n]);\n        }\n    ";
+    function pluck(o, names) {
+        return names.map(function (n) { return o[n]; });
+    }
+    var p = {
+        name: "jarid",
+        age: 35,
+    };
+    var s = pluck(p, ['name']);
+    var s1 = pluck(p, ["name"]);
+    // keyof 索引类型查询操作符
+    // keyof T 的结果为T上的已知公共属性名的联合
+    // 索引类型查询
+    var personProps; // 'name' | 'age'
+    // T[K] 索引访问操作符，类型语法反应了表达式语法
+    // 索引类型访问
+    function getProperty(o, name) {
+        return o[name];
+    }
+    // 如果你有一个带有字符串索引签名的类型，那么keyof T会是string。并且T[string]为索引签名的类型
+    var keys; //string
+    var value; //number
+})(IndexType || (IndexType = {}));
