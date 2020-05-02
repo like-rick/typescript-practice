@@ -161,3 +161,20 @@ class Point{
     }
 }
 
+// 属性装饰器
+// 声明在一个属性声明之前，属性装饰器不能用在声明文件中，或者任何外部上下文里
+
+// 属性装饰器表达式会在运行时当做函数被调用，传入下列2个参数
+
+
+namespace propDecorator{
+    /// <reference path="reflect-metadata" />
+    // import "reflect-metadata";
+}
+
+
+// 参数装饰器
+// 声明在一个参数声明之前，参数装饰器应用于类构造函数或方法声明。
+
+
+

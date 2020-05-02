@@ -26,7 +26,7 @@ interface Point {
     readonly x: number,
     readonly y: number,
 }
-let p: Point = {x: 10, y: 20};
+// let p123: Point = {x: 10, y: 20};
 // p.x = 1;
 
 // ReadOnlyArray 数组只读属性

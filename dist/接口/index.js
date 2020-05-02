@@ -8,7 +8,7 @@ function computeSquera(square) {
     }
     return newSquare;
 }
-var p = { x: 10, y: 20 };
+// let p123: Point = {x: 10, y: 20};
 // p.x = 1;
 // ReadOnlyArray 数组只读属性
 var a = [1, 2, 3];

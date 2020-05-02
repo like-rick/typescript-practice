@@ -67,7 +67,8 @@ var C1 = /** @class */ (function () {
 // 类装饰器
 // 紧靠着类声明，应用于构造函数，可以用来监视，修改或替换类定义。不能用在声明文件中(.d.ts)，也不能用在任何外部上下文中
 // 会在运行时当做函数被调用，类的构造函数作为其唯一的参数
-// 如果累装饰器返回一个值，它会使用提供的构造函数来替换类的声明
+// 如果类装饰器返回一个值，它会使用提供的构造函数来替换类的声明
+// 类装饰器应用到类
 function sealed() {
     console.log("现在开始装饰constructor了");
     return function (construct) {
@@ -114,3 +115,77 @@ var Greeter_2 = /** @class */ (function () {
     return Greeter_2;
 }());
 console.log(new Greeter_2("world"));
+// 方法装饰器
+// 声明在一个方法声明之前，会被应用到方法的属性描述符上，可以用来监视，修改或者替换方法定义。
+// 不能用在声明文件(.d.ts)上，重载或者任何外部上下文中
+// 方法装饰器表达式会在运营时当做函数被调用，传入下列3个参数：
+// 1. 对于静态成员(静态成员变量static，构造函数)来说是类的构造函数，对于实例成员是类的原型对象
+// 2. 成员的名字
+// 3. 成员的属性描述符
+// 如果方法装饰器返回一个值，它会被用做方法的属性描述符
+// 方法装饰器应用到类的实例成员上,
+// eg.
+function enumerable(value) {
+    // target对于实例成员来说，是类的原型对象
+    return function (target, propertyKey, desc) {
+        desc.enumerable = value;
+        return desc; // 如果这里有返回值，会被应用于属性描述符上
+    };
+}
+var Greeter_3 = /** @class */ (function () {
+    function Greeter_3(m) {
+        this.greeting = "greeting";
+        this.greeting = m;
+    }
+    Greeter_3.prototype.greet = function () {
+        return "hello," + this.greeting;
+    };
+    __decorate([
+        enumerable(false)
+    ], Greeter_3.prototype, "greet", null);
+    return Greeter_3;
+}());
+// 访问器装饰器
+// 声明在一个访问器的声明之前，应用于访问器的属性描述符并且可以用来监视，修改或替换一个访问器的定义
+// 访问器装饰器不能应用在声明文件中(.d.ts),或者任何外部上下文中
+// ts不允许同时装饰一个成员的 get和set访问器，一个成员的所有装饰必须应用在文档顺序的第一个访问器上。
+// 访问器装饰器表达式在运行的时候会传入3个值
+// 1. 对于静态成员来说是类的构造函数(<T extends Function>)，对于实例成员来说是类的原型对象(<T extends {}>)
+// 2. 成员的名字
+// 3. 成员的属性描述符
+// 如果访问器属性返回一个值，它会被用做方法的属性描述符
+function configable(value) {
+    return function (target, propertyKey, desc) {
+        desc.configurable = value;
+        return desc;
+    };
+}
+var Point = /** @class */ (function () {
+    function Point(x, y) {
+        this._x = x;
+        this._y = y;
+    }
+    Object.defineProperty(Point.prototype, "x1", {
+        get: function () {
+            return this._x;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Point.prototype, "y1", {
+        get: function () {
+            return this._y;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    __decorate([
+        configable(false)
+    ], Point.prototype, "x1", null);
+    __decorate([
+        configable(true)
+    ], Point.prototype, "y1", null);
+    return Point;
+}());
+// 参数装饰器
+// 声明在一个参数声明之前，参数装饰器应用于类构造函数或方法声明。
