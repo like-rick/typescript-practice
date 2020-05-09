@@ -8,5 +8,6 @@
         "rootDir": "./src",
         "strictNullChecks": true,
         "experimentalDecorators": true,
+        "jsx":"react",
     },
 }

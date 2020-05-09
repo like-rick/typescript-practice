@@ -47,8 +47,20 @@ import "./ZipCodeValidator"
 // 只在某种条件下才加载某个模块，使用下面的方法实现它和其他高级加载场景，可以直接调用模块加载器并且保证类型完全
 // 编译器会检测是否每一个模块都会在生成的javascript中用到，如果一个模块标识符只在类型注解部分使用，并且完全没有在
 // 表达式中使用时，就不会生成require代码。省略掉没有用到的引用对性能提升是很有益的，并同时提供了选择加载模块的能力
+// 这种模式的核心是 import id = require("...") 语句可以让我们访问模块导出类型。模块加载器会被动态调用（通过require）
+// 就像下面if代码块那样。它利用了省略引用的优化，所以模块只需被需要时加载，为了让这个模块工作，一定要注意import定义的标识符
+// 只能在表示类型处使用（不能在会转换成js的地方）
 
+// 为了确保类型安全性，我们可以使用typeof关键字。
 
+// nodejs动态模块加载
+declare function require(module: string): any;
+import { ZipCodeValidator as Zip } from "./ZipCodeValidator";
+const condition = true;
+if (condition) {
+    let ZipCodeValidator: typeof Zip = require("./ZipCodeValidator");
+    let validator = new ZipCodeValidator();
+}
 
 
 

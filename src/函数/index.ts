@@ -74,5 +74,3 @@ namespace overLoad{
     let pickedCard1 = mkDeck[pickCard(mkDeck)]
 
 }
-
-
